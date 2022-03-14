@@ -13,7 +13,7 @@ import time, random
 
 class Table():
     def __init__(self, nphil, manager):
-        self.phil = [False]*nphil
+        self.phil = manager.list( [False]*nphil)
         self.eating = Value('i',0)
         self.actual = None
    
@@ -30,6 +30,7 @@ class Table():
     def wants_eat(self, i):
         self.mutex.acquire()
         self.freefork.wait_for(self.vecinos_libres)
+        #print(self.actual,i)
         self.phil[i]=True
         self.eating.value +=1
         self.mutex.release()
@@ -40,3 +41,5 @@ class Table():
         self.eating.value -=1
         self.freefork.notify()
         self.mutex.release()
+        
+class Cheat
