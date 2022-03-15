@@ -42,4 +42,26 @@ class Table():
         self.freefork.notify()
         self.mutex.release()
         
-class Cheat
+        
+        
+class CheatMonitor():
+    
+    def __init__(self):
+        self.eating = Value('i',0)
+        self.mutex = Lock()
+        self.checkingFriend = Condition(self.mutex)
+        
+    def is_eating(self,n):
+        self.mutex.acquire()
+        self.eating.value += 1
+        self.checkingFriend.notify()
+        self.mutex.release()
+        
+    def readyToThink(self):
+        return self.eating.value == 2
+    
+    def wants_think(self,n):
+        self.mutex.acquire()
+        self.checkingFriend.wait_for(self.readyToThink)
+        self.eating.value -= 1
+        self.mutex.release()
